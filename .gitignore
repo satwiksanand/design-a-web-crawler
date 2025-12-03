@@ -1,8 +1,21 @@
 ### IntelliJ IDEA ###
+TODO.md
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .kotlin
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
 
 NOTES.md
 src/main/java/Kachra.java

@@ -31,3 +31,4 @@ the simple version goes something like this:
 4. store the web page content in a database, for our case we go for mongoDB
 5. add to queue: add the extracted links(if not explored already) to the queue.
 
+for this version, I am using HashMaps to store data instead of a database.
