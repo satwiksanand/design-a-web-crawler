@@ -1,3 +1,5 @@
+>This project is a working Java implementation of the web crawler design proposed in Chapter 9 of "System Design Interview – An Insider's Guide" by Alex Xu.
+
 # Designing a web crawler
 
 ## Introduction:
@@ -36,6 +38,8 @@ for this version, I am using HashMaps to store data instead of a database.
 ## Working on the complete version
 
 ### Requirements
+
+>Using the scale constraints provided in the book for the sake of system design estimation.
 
 #### Functional requirements
 - should crawl around 1B pages every month.
@@ -109,4 +113,81 @@ we are preferring No-SQL database for this project, the reason being as follows.
     inserting thousands of rows per second may require complex tuning, sharding or even expensive vertical scaling
     No-SQL on the other hand is optimized for write-heavy applications
 - using No-SQL also provides us the flexibility to add new data with bothering about the schema of the data being store previously.
+
+### Deep Dive:
+
+BFS is preferred over DFS for web-crawlers because the depth of the web
+can be huge which could starve the other urls.
+
+#### URL Frontier
+
+URL Frontier stores the url that are yet to be downloaded, to avoid sending
+multiple requests to the same server within a short interval of time and to
+prioritize the important url's first, this data-structure operates in two steps.
+
+- URL prioritization
+- URL politeness
+
+##### URL prioritization
+
+this is the first step in which we prioritize urls based on various criteria like
+page rank, web traffic.
+
+when we extract urls from a web page, we have to sort them in such a way
+that the most important of the urls are prioritized, the urls are sent to
+the first part of the url frontier and undergoes the following sorting 
+procedure, below is the architecture.
+
+![web-crawler-url-frontier-prioritization](assets/web-crawler-url-frontier-prioritization.png)
+
+let's talk about the components of this architecture one by one.
+1. URL Prioritizer:
+    this is the component which computes the priority of the URL, and based
+    on how high the priority is the URL are stored in different queues.
+2. Queues(F1 ... Fn):
+    these are the queues that hold the url sorted by their priority, like for
+    example F1 queue holds the url's with the highest priority, F2 holds the
+    url's with slightly lower priority and so on.
+3. Queue Selector:
+    this component is responsible for selecting queue randomly with probability
+    slightly biased towards the queues with higher probability.
+
+the queue selector chooses a queue and fetches the url present in it, this
+url is then sent on to the next part of the url frontier which maintains politeness.
+
+##### How to manage politeness
+
+we manage politeness by simply sorting out urls based on the host, and assigning
+a worker thread to each specific host, the worker thread then pulls out urls from the queues
+and processes them with some delay in between to maintain politeness.
+
+![web-crawler-url-frontier-politeness](assets/web-crawler-url-frontier-politeness.png)
+
+let's talk about the components of this architecture one by one
+1. Queue Router:
+    this component ensures that each of the queue (b1 ... bn) have url from the same host.
+2. Mapping Table:
+    this is the component that maps host to it's specific worker threads.
+3. Queue(b1 ... bn):
+    each queue contain url from the same host, the purpose being to not send too many request to the same host
+    by sorting all the url's from the same host together and adding some delay in between.
+4. Queue Selector:
+    each worker thread is mapped to one queue and it only downloads URLs from that queue
+    this queue selection logic is maintained by queue selector.
+5. Worker Threads:
+    they are responsible for processing urls from their mapped queues.
+
+For this project, I am planning to use java data-structures like `DelayedQueue` for implementation of this part.
+
+continuing from the last part, the url is now reaches this segment of the url frontier,
+here the url first reaches the Queue Router, Queue Router then checks
+if there is already a worker thread assigned to the host of the current url,
+if yes then the current url is simply pushed into the queue corresponding the host and if not
+then a new entry is made into the mapping table, a new queue is made and a
+new worker thread is assigned, the queue selector pulls out the url from the queues and then assigns it's
+processing to the worker thread.
+
+if any queue at any time is empty then the corresponding entry is removed
+and the worker thread is freed, this logic can kind of change during the implementation
+though, maybe i will update it during implementation.
 
