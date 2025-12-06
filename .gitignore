@@ -1,47 +1,37 @@
-### IntelliJ IDEA ###
-TODO.md
+# Gradle files
+.gradle/
+build/
+*/build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+*.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-.kotlin
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
-
+build_log.txt
 NOTES.md
+TODO.md
 src/main/java/Kachra.java
-*.class
 
-### Eclipse ###
-.apt_generated
+# Eclipse files
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+test-output/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-
-### VS Code ###
+# Visual Studio Code files
 .vscode/
 
-### Mac OS ###
+# MacOS
 .DS_Store
+
+# Logs
+logs/
+*.log

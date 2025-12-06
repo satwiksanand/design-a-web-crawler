@@ -1,4 +1,4 @@
->This project is a working Java implementation of the web crawler design proposed in Chapter 9 of "System Design Interview – An Insider's Guide" by Alex Xu.
+>This project is a Java implementation attempt of the web crawler design proposed in Chapter 9 of "System Design Interview – An Insider's Guide" by Alex Xu.
 
 # Designing a web crawler
 
@@ -180,14 +180,26 @@ let's talk about the components of this architecture one by one
 For this project, I am planning to use java data-structures like `DelayedQueue` for implementation of this part.
 
 continuing from the last part, the url is now reaches this segment of the url frontier,
-here the url first reaches the Queue Router, Queue Router then checks
-if there is already a worker thread assigned to the host of the current url,
-if yes then the current url is simply pushed into the queue corresponding the host and if not
-then a new entry is made into the mapping table, a new queue is made and a
-new worker thread is assigned, the queue selector pulls out the url from the queues and then assigns it's
-processing to the worker thread.
+The URL reaches the Queue Router, which determines the host of the URL (e.g., wikipedia.org). 
+The Router checks the Mapping Table to see if a queue already exists for this host.
+
+- If Yes: The URL is pushed into the existing queue for that host.
+- If No: A new queue is created for this host, and the mapping is updated.
+
+The Queue Selector then acts as the scheduler. 
+It continuously scans the queues. When a queue is ready (respecting politeness delays), 
+the Selector pulls a URL and assigns it to an available worker thread 
+from the thread pool. This ensures that while we may have thousands 
+of queues (hosts), we efficiently process them with a fixed number 
+of threads.
 
 if any queue at any time is empty then the corresponding entry is removed
 and the worker thread is freed, this logic can kind of change during the implementation
 though, maybe i will update it during implementation.
 
+##### HTML Downloader
+
+A HTML Downloader is used for downloading HTML content from the web.
+what kind of content to download and what kind of pages to avoid is something
+that can be configured with the use of `robots.txt` file, which is a special 
+file in the web-crawler design system meant for communicating with the robot.
