@@ -18,5 +18,6 @@ public class Main {
                 "ftp://files.server.com:21/download"
         };
 
+        System.out.println(URLFrontierImpl.extractHost("https://www.wikipedia.org/"));
     }
 }
