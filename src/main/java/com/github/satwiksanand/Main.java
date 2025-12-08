@@ -1,6 +1,5 @@
 package com.github.satwiksanand;
 
-import com.mongodb.client.*;
 import java.util.Scanner;
 
 public class Main {
@@ -12,13 +11,12 @@ public class Main {
 //        System.out.println(seedUrl);
 
         String[] urls = {
-                "https://www.example.com/path/to/page",
+                "https://www.javaspring.net/blog/convert-list-of-objects-to-array-java/",
                 "http://subdomain.example.org:8080/api",
                 "https://github.com/user/repo?query=value",
                 "www.test.com/page",
                 "ftp://files.server.com:21/download"
         };
-        URLFrontierImpl.insertUrls(urls);
-        System.out.println(URLFrontierImpl.fetchNextURL());
+
     }
 }
