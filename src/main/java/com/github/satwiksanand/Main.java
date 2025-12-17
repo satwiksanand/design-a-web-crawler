@@ -1,11 +1,17 @@
 package com.github.satwiksanand;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     private final static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 //        System.out.println("Please enter the seed url");
 //        String seedUrl = scanner.next();
 //        System.out.println(seedUrl);
@@ -18,6 +24,17 @@ public class Main {
                 "ftp://files.server.com:21/download"
         };
 
-        System.out.println(URLFrontierImpl.extractHost("https://www.wikipedia.org/"));
+        List<String> allLines = new ArrayList<>();
+        System.out.println(new File("src\\main\\java\\com\\github\\satwiksanand\\robotExample.txt").getCanonicalPath());
+        try(BufferedReader reader = new BufferedReader(new FileReader("src\\main\\java\\com\\github\\satwiksanand\\robotExample.txt"))){
+            String line;
+            while((line = reader.readLine()) != null){
+                allLines.add(line);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        RobotParser rule = RobotParser.parse(allLines, "satwikBot");
     }
 }
